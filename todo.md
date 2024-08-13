@@ -1,8 +1,8 @@
 # todo
 
-- [ ] add git remote
+- [x] add git remote
 - [ ] continue [docs tutorial]
-  - sending embeds
+  - sending dm's
 - [ ] make function to register commands
   - [ ] slash commands
   - [ ] commands

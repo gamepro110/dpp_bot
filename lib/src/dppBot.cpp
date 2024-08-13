@@ -1,18 +1,21 @@
 #include "dppBot.hpp"
 
-#include <iostream>
-#include <filesystem>
 #include <cstdio>
+#include <filesystem>
+#include <iostream>
 
-dppBot::dppBot() :
-    bot("")
-{
+dppBot::dppBot() : bot("") {
+    dpp::utility::loglevel(dpp::loglevel::ll_trace);
     bot.on_log(dpp::utility::cout_logger());
 }
 
 bool dppBot::GetLineFromFile(std::string_view fileName, std::string& tknStr) const {
     if (!std::filesystem::exists(fileName.data())) {
-        fprintf(stderr, "%s (%s %s)\n", "file not found", std::filesystem::current_path().c_str(), fileName.data());
+        fprintf(stderr,
+                "%s (%s %s)\n",
+                "file not found",
+                std::filesystem::current_path().c_str(),
+                fileName.data());
         return false;
     }
 
@@ -41,9 +44,8 @@ void dppBot::Run() {
     });
 
     try {
-       bot.start(false);
-    }
-    catch(const dpp::exception& e) {
+        bot.start(false);
+    } catch (const dpp::exception& e) {
         fprintf(stderr, "%s\n", e.what());
     }
 }
