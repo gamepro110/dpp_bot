@@ -1,0 +1,685 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 16
+    },
+    "configurePresets": [
+        {
+            "name": "base-common",
+            "description": "General settings that apply to all configurations",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}"
+        },
+        {
+            "name": "base-windows",
+            "description": "Windows settings for MSBuild toolchain that apply ot msvc and clang",
+            "hidden": true,
+            "inherits": [
+                "base-common"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolset": {
+                "value": "host=x64",
+                "strategy": "external"
+            }
+        },
+        {
+            "name": "base-unix",
+            "description": "unix based os settings for gcc and clang toolchains",
+            "hidden": true,
+            "inherits": [
+                "base-common"
+            ],
+            "condition": {
+                "type": "inList",
+                "string": "${hostSystemName}",
+                "list": [
+                    "Linux",
+                    "Darwin"
+                ]
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/${sourceDirName}"
+                }
+            }
+        },
+        {
+            "name": "base-linux",
+            "hidden": true,
+            "inherits": [
+                "base-unix"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "base-macos",
+            "hidden": true,
+            "inherits": [
+                "base-unix"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            }
+        },
+        {
+            "name": "windows-msvc-debug",
+            "displayName": "msvc Debug",
+            "description": "Target Windows with the msvc compiler",
+            "inherits": [
+                "base-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "windows-msvc-release",
+            "displayName": "msvc Release",
+            "description": "Target Windows with the msvc compiler",
+            "inherits": [
+                "base-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "windows-msvc-dist",
+            "displayName": "msvc Dist",
+            "description": "Target Windows with the msvc compiler",
+            "inherits": [
+                "base-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "windows-clang-debug",
+            "displayName": "clang Debug",
+            "description": "Target Windows with the clang compiler",
+            "inherits": [
+                "base-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang-cl",
+                "CMAKE_CXX_COMPILER": "clang-cl",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "windows-clang-release",
+            "displayName": "clang Release",
+            "description": "Target Windows with the clang compiler",
+            "inherits": [
+                "base-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang-cl",
+                "CMAKE_CXX_COMPILER": "clang-cl",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "windows-clang-dist",
+            "displayName": "clang Dist",
+            "description": "Target Windows with the clang compiler",
+            "inherits": [
+                "base-windows"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang-cl",
+                "CMAKE_CXX_COMPILER": "clang-cl",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "linux-gcc-debug",
+            "displayName": "gcc Debug",
+            "description": "Target linux with the gcc compiler",
+            "inherits": [
+                "base-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "linux-gcc-release",
+            "displayName": "gcc Release",
+            "description": "Target linux with the gcc compiler",
+            "inherits": [
+                "base-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "linux-gcc-dist",
+            "displayName": "gcc Dist",
+            "description": "Target linux with the gcc compiler",
+            "inherits": [
+                "base-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "linux-clang-debug",
+            "displayName": "clang Debug",
+            "description": "Target linux with the clang compiler",
+            "inherits": [
+                "base-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "linux-clang-release",
+            "displayName": "clang Release",
+            "description": "Target linux with the clang compiler",
+            "inherits": [
+                "base-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "linux-clang-dist",
+            "displayName": "clang Dist",
+            "description": "Target linux with the clang compiler",
+            "inherits": [
+                "base-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "macos-gcc-debug",
+            "displayName": "gcc Debug",
+            "description": "Target mac with the gcc compiler",
+            "inherits": [
+                "base-macos"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "macos-gcc-release",
+            "displayName": "gcc Release",
+            "description": "Target mac with the gcc compiler",
+            "inherits": [
+                "base-macos"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "macos-gcc-dist",
+            "displayName": "gcc Dist",
+            "description": "Target mac with the gcc compiler",
+            "inherits": [
+                "base-macos"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "macos-clang-debug",
+            "displayName": "clang Debug",
+            "description": "Target mac with the clang compiler",
+            "inherits": [
+                "base-macos"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "macos-clang-release",
+            "displayName": "clang Release",
+            "description": "Target mac with the clang compiler",
+            "inherits": [
+                "base-macos"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "macos-clang-dist",
+            "displayName": "clang Dist",
+            "description": "Target mac with the clang compiler",
+            "inherits": [
+                "base-macos"
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "hidden": true,
+            "verbose": true,
+            "name": "base-build",
+            "inheritConfigureEnvironment": true
+        },
+        {
+            "hidden": true,
+            "name": "windows-base",
+            "inherits": [
+                "base-build"
+            ]
+        },
+        {
+            "hidden": true,
+            "name": "linux-base",
+            "inherits": [
+                "base-build"
+            ]
+        },
+        {
+            "hidden": true,
+            "name": "macos-base",
+            "inherits": [
+                "base-build"
+            ]
+        },
+        {
+            "name": "windows-msvc-debug",
+            "displayName": "msvc-debug",
+            "inherits": [
+                "windows-base"
+            ],
+            "configurePreset": "windows-msvc-debug"
+        },
+        {
+            "name": "windows-msvc-release",
+            "displayName": "msvc-release",
+            "inherits": [
+                "windows-base"
+            ],
+            "configurePreset": "windows-msvc-release"
+        },
+        {
+            "name": "windows-msvc-dist",
+            "displayName": "msvc-dist",
+            "inherits": [
+                "windows-base"
+            ],
+            "configurePreset": "windows-msvc-dist"
+        },
+        {
+            "name": "windows-clang-debug",
+            "displayName": "clang-debug",
+            "inherits": [
+                "windows-base"
+            ],
+            "configurePreset": "windows-clang-debug"
+        },
+        {
+            "name": "windows-clang-release",
+            "displayName": "clang-release",
+            "inherits": [
+                "windows-base"
+            ],
+            "configurePreset": "windows-clang-release"
+        },
+        {
+            "name": "windows-clang-dist",
+            "displayName": "clang-dist",
+            "inherits": [
+                "windows-base"
+            ],
+            "configurePreset": "windows-clang-dist"
+        },
+        {
+            "inherits": [
+                "linux-base"
+            ],
+            "configurePreset": "linux-gcc-debug",
+            "displayName": "gcc-debug",
+            "name": "linux-gcc-debug"
+        },
+        {
+            "inherits": [
+                "linux-base"
+            ],
+            "configurePreset": "linux-gcc-release",
+            "displayName": "gcc-release",
+            "name": "linux-gcc-release"
+        },
+        {
+            "inherits": [
+                "linux-base"
+            ],
+            "configurePreset": "linux-gcc-dist",
+            "displayName": "gcc-dist",
+            "name": "linux-gcc-dist"
+        },
+        {
+            "inherits": [
+                "linux-base"
+            ],
+            "configurePreset": "linux-clang-debug",
+            "displayName": "clang-debug",
+            "name": "linux-clang-debug"
+        },
+        {
+            "inherits": [
+                "linux-base"
+            ],
+            "configurePreset": "linux-clang-release",
+            "displayName": "clang-release",
+            "name": "linux-clang-release"
+        },
+        {
+            "inherits": [
+                "linux-base"
+            ],
+            "configurePreset": "linux-clang-dist",
+            "displayName": "clang-dist",
+            "name": "linux-clang-dist"
+        },
+        {
+            "inherits": [
+                "macos-base"
+            ],
+            "configurePreset": "macos-gcc-debug",
+            "displayName": "gcc-debug",
+            "name": "macos-gcc-debug"
+        },
+        {
+            "inherits": [
+                "macos-base"
+            ],
+            "configurePreset": "macos-gcc-release",
+            "displayName": "gcc-release",
+            "name": "macos-gcc-release"
+        },
+        {
+            "inherits": [
+                "macos-base"
+            ],
+            "configurePreset": "macos-gcc-dist",
+            "displayName": "gcc-dist",
+            "name": "macos-gcc-dist"
+        },
+        {
+            "inherits": [
+                "macos-base"
+            ],
+            "configurePreset": "macos-clang-debug",
+            "displayName": "clang-debug",
+            "name": "macos-clang-debug"
+        },
+        {
+            "inherits": [
+                "macos-base"
+            ],
+            "configurePreset": "macos-clang-release",
+            "displayName": "clang-release",
+            "name": "macos-clang-release"
+        },
+        {
+            "inherits": [
+                "macos-base"
+            ],
+            "configurePreset": "macos-clang-dist",
+            "displayName": "clang-dist",
+            "name": "macos-clang-dist"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test-common",
+            "hidden": true,
+            "output": {
+                "outputOnFailure": true,
+                "shortProgress": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true,
+                "jobs": 4
+            }
+        },
+        {
+            "name": "windows-msvc-debug",
+            "displayName": "msvc-debug-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "windows-msvc-debug",
+            "configuration": "windows-msvc-debug"
+        },
+        {
+            "name": "windows-msvc-release",
+            "displayName": "msvc-release-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "windows-msvc-release",
+            "configuration": "windows-msvc-release"
+        },
+        {
+            "name": "windows-msvc-dist",
+            "displayName": "msvc-dist-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "windows-msvc-dist",
+            "configuration": "windows-msvc-dist"
+        },
+        {
+            "name": "windows-clang-debug",
+            "displayName": "clang-debug-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "windows-clang-debug",
+            "configuration": "windows-clang-debug"
+        },
+        {
+            "name": "windows-clang-release",
+            "displayName": "clang-release-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "windows-clang-release",
+            "configuration": "windows-clang-release"
+        },
+        {
+            "name": "windows-clang-dist",
+            "displayName": "clang-dist-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "windows-clang-dist",
+            "configuration": "windows-clang-dist"
+        },
+        {
+            "name": "linux-gcc-debug",
+            "displayName": "gcc-debug-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "linux-gcc-debug",
+            "configuration": "linux-gcc-debug"
+        },
+        {
+            "name": "linux-gcc-release",
+            "displayName": "gcc-release-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "linux-gcc-release",
+            "configuration": "linux-gcc-release"
+        },
+        {
+            "name": "linux-gcc-dist",
+            "displayName": "gcc-dist-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "linux-gcc-dist",
+            "configuration": "linux-gcc-dist"
+        },
+        {
+            "name": "linux-clang-debug",
+            "displayName": "clang-debug-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "linux-clang-debug",
+            "configuration": "linux-clang-debug"
+        },
+        {
+            "name": "linux-clang-release",
+            "displayName": "clang-release-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "linux-clang-release",
+            "configuration": "linux-clang-release"
+        },
+        {
+            "name": "linux-clang-dist",
+            "displayName": "clang-dist-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "linux-clang-dist",
+            "configuration": "linux-clang-dist"
+        },
+        {
+            "name": "macos-gcc-debug",
+            "displayName": "gcc-debug-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "macos-gcc-debug",
+            "configuration": "macos-gcc-debug"
+        },
+        {
+            "name": "macos-gcc-release",
+            "displayName": "gcc-release-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "macos-gcc-release",
+            "configuration": "macos-gcc-release"
+        },
+        {
+            "name": "macos-gcc-dist",
+            "displayName": "gcc-dist-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "macos-gcc-dist",
+            "configuration": "macos-gcc-dist"
+        },
+        {
+            "name": "macos-clang-debug",
+            "displayName": "clang-debug-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "macos-clang-debug",
+            "configuration": "macos-clang-debug"
+        },
+        {
+            "name": "macos-clang-release",
+            "displayName": "clang-release-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "macos-clang-release",
+            "configuration": "macos-clang-release"
+        },
+        {
+            "name": "macos-clang-dist",
+            "displayName": "clang-dist-test",
+            "description": "Enable output and stop on failure",
+            "inherits": [
+                "test-common"
+            ],
+            "configurePreset": "macos-clang-dist",
+            "configuration": "macos-clang-dist"
+        }
+    ]
+}
